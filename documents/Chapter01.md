@@ -30,7 +30,7 @@
 
 ### 1.2.3 기존 도구와 ES 함께 사용
 
-![그림1-4](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig04.jpg)
+![그림1-4](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig04_alt.jpg)
 
 
 ---
@@ -40,7 +40,7 @@
 
 ### 1.2.5 루씬의 기능 확장
 
-![그림1-5](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig05.jpg)
+![그림1-5](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig05_alt.jpg)
 
 
 ### 1.2.6 데이터 구조화하기
