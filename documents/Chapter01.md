@@ -32,9 +32,12 @@
 
 ![그림1-4](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig04_alt.jpg)
 
+![이벤트 색인](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/012fig01_alt.jpg)
+![검색 요청](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/012fig02_alt.jpg)
+
 
 ---
-## 기능 소개
+## 특징 소개
 
 ### 1.2.4 주요 특징
 
