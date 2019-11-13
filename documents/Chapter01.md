@@ -141,40 +141,66 @@
 
 ### 1.2.7 자바 설치
 
+- JRE 필요
+- 1.7 이후에는 어떤 JRE든 동작 가능
+
 ### 1.2.8 ES 내려 받기
+
+- 제공 형태
+  - 압축 파일 : tar.gz , ZIP
+  - 패키지 : brew, rpm, deb
+
+- 기본 로그 위치
+  - 압축 파일 : $ES_HOME/logs
+  - 패키지 : /var/log/elasticsearch
 
 ### 1.2.9 동작 확인
 
+1) 시작한 노드에 관한 상태 정보.
+  - 노드 이름 확인 : 임의의 이름을 노드에 할당. 설정 가능
+  - JVM의 pid 확인 가능
 ```bash
 [node] [Karkas] version[1.4.0], pid[6011], build[bc94bd8/2014-11-05T14:26:12Z]
 ```
 
-
+2) 플러그인 로드
+  - 시작 시점에 플러그인 로드
+  - 기본으로는 아무 것도 없음
 ```bash
 [plugins] [Karkas] loaded [], sites []
 ```
 
-
+3) 노드간 통신 포트
+  - 트랜스포트를 위한 포트
+  - JAVA API 사용시 이 포트 사용
+  - 기본값 :9300
 ```bash
 [transport] [Karkas] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.8:9300]}
 ```
 
-
+4) 마스터 노드 선출
+  - 어떤 노드가 클러스터에 있고,
+  - 어디에 모든 샤드들이 있는지 알고 있는 노드
+  - 유효하지 않으면 새 노드가 선출
 ```bash
 [cluster.service] [Karkas] new_master [Karkas][YPHC_vWiQVuSX-ZIJIlMhg][inet[/192.168.1.8:9300]], reason: zen-disco-join (elected_as_master)
 ```
 
-
+5) HTTP 통신 포트
+  - REST API 포트
+  - 기본값 : 9200
 ```bash
 [http] [Karkas] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.8:9200]}
 ```
 
-
+6) 노드 시작 메시지
 ```bash
 [node] [Karkas] started
 ```
 
-
+7) 게이트웨이
+  - 데이터를 디스크에 기록하는 일래스틱서치 구성 요소
+  - 노드가 내려가도 데이터를 잃지 않도록 함
 ```bash
 [gateway] [Karkas] recovered [0] indices into cluster_state
 ```
