@@ -125,3 +125,39 @@
 ### 1.2.8 ES 내려 받기
 
 ### 1.2.9 동작 확인
+
+```bash
+[node] [Karkas] version[1.4.0], pid[6011], build[bc94bd8/2014-11-05T14:26:12Z]
+```
+
+```bash
+[plugins] [Karkas] loaded [], sites []
+```
+
+
+```bash
+[transport] [Karkas] bound_address {inet[/0.0.0.0:9300]}, publish_address {inet[/192.168.1.8:9300]}
+```
+
+
+```bash
+[cluster.service] [Karkas] new_master [Karkas][YPHC_vWiQVuSX-ZIJIlMhg][inet[/192.168.1.8:9300]], reason: zen-disco-join (elected_as_master)
+```
+
+
+```bash
+[http] [Karkas] bound_address {inet[/0.0.0.0:9200]}, publish_address {inet[/192.168.1.8:9200]}
+```
+
+
+```bash
+[node] [Karkas] started
+```
+
+
+```bash
+[gateway] [Karkas] recovered [0] indices into cluster_state
+```
+
+
+
