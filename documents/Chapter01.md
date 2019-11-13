@@ -85,28 +85,47 @@
   - 기존 시스템의 백엔드로 : 로그 수집 용도 등. 이미 만들어진 도구 활용
 
 ---
-## 조합 방법
+## # 활용 방법
 
 ### 1.2.1 ES를 기본 백엔드로
 
 ![그림1-2](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig02.jpg)
 
+- 전통적으로 데이터 저장소 위에 배포
+- 과거에는 검색엔진이 내구성 있는 저장소나 통계 같은 기능을 제공하지 않았음
+- 일래스틱서치는 내구성 있는 저장소와 통계, 그외 많은 기능을 제공
+- 단일 데이터 저장소로 사용 가능 (NoSQL 저장소)
+- 업데이트 많은 경우에는 부적합
+- 트랜잭션 미지원
+- 서버가 내려가면, 다른 서버에 데이터를 복제하여 내고장성 확보 가능
+
 ### 1.2.2 기존 시스템에 ES 추가
 
 ![그림1-3](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig03.jpg)
 
+- 데이터 저장소로써의 모든 기능 없기 때문에, 다른 저장소에 검색 기능을 부가적으로 추가
+- 두 저장소간 동기화 필요. 플러그인을 배포해 동기화하거나 직접 서비스를 만들 수 있음
+  - 각각의 상품과 일치하는 모든 데이터를 가져와서,
+  - 일래스틱서치에 색인할 수 있고,
+  - 각각의 상품은 하나의 문서로 저장
 
 ### 1.2.3 기존 도구와 ES 함께 사용
 
 ![그림1-4](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig04_alt.jpg)
 
+- 많은 도구가 제공됨
+- 경우에 따라 한 줄의 코드도 작성하지 않고 일래스틱서치 사용 가능
+
+
 ![이벤트 색인](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/012fig01_alt.jpg)
 
 ![검색 요청](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/012fig02_alt.jpg)
 
+- JAVA API외에 REST API 제공. 기본적으로 요청/응답에 JSON 활용. YAML도 지원
+- 보통 HTTP 통신에 JSON, 설정에 YAML 사용
 
 ---
-## 특징 소개
+## # 특징 소개
 
 ### 1.2.4 주요 특징
 
@@ -118,7 +137,7 @@
 ### 1.2.6 데이터 구조화하기
 
 ---
-## 설치
+## # 설치 방법
 
 ### 1.2.7 자바 설치
 
@@ -129,6 +148,7 @@
 ```bash
 [node] [Karkas] version[1.4.0], pid[6011], build[bc94bd8/2014-11-05T14:26:12Z]
 ```
+
 
 ```bash
 [plugins] [Karkas] loaded [], sites []
