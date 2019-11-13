@@ -21,9 +21,16 @@
 
 ### 1.2.1 ES를 기본 백엔드로
 
+![그림1-2](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig02.jpg)
+
 ### 1.2.2 기존 시스템에 ES 추가
 
+![그림1-3](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig03.jpg)
+
+
 ### 1.2.3 기존 도구와 ES 함께 사용
+
+![그림1-4](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig04.jpg)
 
 
 ---
@@ -32,6 +39,9 @@
 ### 1.2.4 주요 특징
 
 ### 1.2.5 루씬의 기능 확장
+
+![그림1-5](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/01fig05.jpg)
+
 
 ### 1.2.6 데이터 구조화하기
 
