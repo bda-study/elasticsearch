@@ -7,4 +7,4 @@
 - 다수의 노드로 작업하기
 ---
 ## 2.0 Deprecated contents
-- 현재 hombrew 패키지를 통하여 설치하면 elastic version이 `6.8.4`입니다. 책에서 소개한 syntax 및 예약어들이 변경이나 deprecated되어 애러가 발생하는 경우가 많다.
+- 현재 hombrew 패키지를 통하여 설치하면 elastic search version이 `6.8.4`이다. 책에서 소개한 소스코드는 `1.5` 기준이라서 syntax 및 예약어들이 변경이나 deprecated되어 애러가 발생하는 경우가 많다.~~(안 되는게 너무 많다...)~~
