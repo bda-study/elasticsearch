@@ -13,8 +13,8 @@
 - 소스코드 다운로드 6.x
 ```bash
 git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
-  - group 타입이 아니고, `_doc ` 타입으로 인덱싱한다.
 ```
+- group 타입이 아니고, `_doc ` 타입으로 인덱싱한다.
 - cURL put, post 시에 header를 추가한다.(-H, --header <header/@file> Pass custom header(s) to server)
 `-H'Content-Type: application/json'`
 
