@@ -10,6 +10,13 @@
 ## 2.0 Deprecated contents
 
 - 현재 hombrew 패키지를 통하여 설치하면 elastic search version이 `6.8.4`이다. 책에서 소개한 소스코드는 `1.5` 기준이라서 syntax 및 예약어들이 변경이나 deprecated되어 애러가 발생하는 경우가 많다.~~(안 되는게 너무 많다...)~~
+- 소스코드 다운로드 6.x
+```bash
+git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
+  - group 타입이 아니고, `_doc ` 타입으로 인덱싱한다.
+```
+- cURL put, post 시에 header를 추가한다.(-H, --header <header/@file> Pass custom header(s) to server)
+`-H'Content-Type: application/json'`
 
 ## 2.1 논리적인 배치 이해하기: 문서, 타입, 색인
 
@@ -44,3 +51,38 @@
   - TF(term frequency) :  특정한 단어가 문서 내에 얼마나 자주 등장하는지를 나타내는 값
   - DF(document frequency) : 단어 자체가 문서군 내에서 자주 사용되는 경우, 이것은 그 단어가 흔하게 등장한다는 것을 의미
   - IDF(inverse document frequency) : DF값의 역수
+
+## 2.3 새로운 데이터 색인
+
+- cURL : 다양한 통신 프로토콜을 이용하여 데이터를 전송하기 위한 라이브러리와 명령 줄 도구를 제공하는 컴퓨터 소프트웨어 프로젝트이다.
+- elasticsearch의 데이터 핸들링은 cURL을 통하여 진행한다.
+- 일래스틱서치는 기본값으로 자동으로 색인을 추가하고 타입을 위한 새로운 매핑도 생성한다.
+- 데이터 검색하고 가져오기
+![데이터 검색하고 가져오기](https://user-images.githubusercontent.com/49108738/69001768-9b2ccb00-0927-11ea-83eb-d4f6efdd39b2.png)
+- 어디를 검색할지 설정하기
+```bash
+% curl "localhost:9200/get-together/group,event/_search\
+?q=elasticsearch&pretty"
+```
+```bash
+% curl 'localhost:9200/get-together/_search?q=sample&pretty'
+```
+```bash
+% curl "localhost:9200/get-together,other-index/_search\
+?q=elasticsearch&pretty"
+```
+```bash
+% curl 'localhost:9200/_search?q=elasticsearch&pretty'
+```
+- 응답내용
+![응답내용](https://user-images.githubusercontent.com/49108738/69001974-2b204400-092b-11ea-98d5-e96cae12bb81.png)
+- 적절한 쿼리 선택을 사용하여 검색하기
+- 필터를 사용하여 검색하기
+  - 필트 쿼리는 결과 데이터에 대하여 scoring 하지 않는다.
+  - 다른 쿼리보다 빠르고 쉽게 캐시에 저장할 수 있다.
+  - 점수가 없기 때문에 필터 결과는 점수에 의해 정렬되지 않는다.
+- 집계 적용하여 검색하기
+  - text 필드 데이터는 높은 카디널리티 필드를 로드 할 때 많은 힙 공간을 소비 할 수 있어서 `fielddata` 기본값이 `false`임.
+  - agrregation 쿼리시에 `fielddata=true` 설정이 필요하다.[참조](https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html)
+- ID로 문서를 가져올 수 있으며, 검색보다 훨씬 빠르고 자원 측면에서 저렴하다.~~elasticsearch를 사용하는 의미가...~~
+- 문서가 존재하지 않으면 found feild의 value가 `false`다.
