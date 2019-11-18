@@ -1,4 +1,3 @@
-# Chapter02 script
 # p71
 curl -s -XPUT 'localhost:9200/get-together/group/1' -H'Content-Type: application/json' -d '{
 "name": "Elasticsearch Denver",
@@ -7,7 +6,7 @@ curl -s -XPUT 'localhost:9200/get-together/group/1' -H'Content-Type: application
 
 
 # p73
-curl -s 'localhost:9200/get-together/_mapping/group' | jq '.'
+curl -s 'localhost:9200/get-together/_mapping/_doc' | jq '.'
 
 # p76
 curl -s "localhost:9200/get-together/group,event,_doc/_search\
@@ -85,3 +84,6 @@ curl -s "localhost:9200/get-together/_doc/_search" -H'Content-Type: application/
 
 # p87
 curl -s "localhost:9200/get-together/_doc/1" | jq '.'
+
+# p92
+curl "localhost:9200/_cat/shards?v"
