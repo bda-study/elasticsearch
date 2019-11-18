@@ -14,7 +14,7 @@
 ```bash
 git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 ```
-- group 타입이 아니고, `_doc ` 타입으로 인덱싱한다.
+- group 타입이 아니고, `_doc` 타입으로 인덱싱한다.
 - cURL put, post 시에 header를 추가한다.(-H, --header <header/@file> Pass custom header(s) to server)
 `-H'Content-Type: application/json'`
 
@@ -59,6 +59,9 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 - 일래스틱서치는 기본값으로 자동으로 색인을 추가하고 타입을 위한 새로운 매핑도 생성한다.
 - 데이터 검색하고 가져오기
 ![데이터 검색하고 가져오기](https://user-images.githubusercontent.com/49108738/69001768-9b2ccb00-0927-11ea-83eb-d4f6efdd39b2.png)
+
+## 2.4 데이터 검색하고 가져오기
+
 - 어디를 검색할지 설정하기
 ```bash
 % curl "localhost:9200/get-together/group,event/_search\
@@ -86,3 +89,35 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
   - agrregation 쿼리시에 `fielddata=true` 설정이 필요하다.[참조](https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html)
 - ID로 문서를 가져올 수 있으며, 검색보다 훨씬 빠르고 자원 측면에서 저렴하다.~~elasticsearch를 사용하는 의미가...~~
 - 문서가 존재하지 않으면 found feild의 value가 `false`다.
+
+## 2.5 일래스틱서치 설정하기
+
+```bash
+brew info elasticsearch
+```
+- `elasticsearch.yml`에 클러스터 이름 명시하기 - 일래스틱 특유의 옵션이 들어가는 주 설정 파일이다.
+  - homebrew 패키지를 통하여 설치한 경우 위치는 `/usr/local/etc/elasticsearch/elasticsearch.yml`
+- `logging.yml`에 로깅 옵션 수정하기 - 로깅 설정 파일은 일래스틱서치가 로깅을 위해 사용하는 log4j의 옵션을 위한 것이다.
+  - homrbrew 패키지를 통하여 설치한 경우 로깅 위치는 `/usr/local/var/log/elasticsearch`
+  - 메인 로그(cluster-name.log) - 일래스틱서치가 동작 중일 때 무슨 일이 일어났는지에 관한 일반적인 정보를 알 수 있다. 예를 들어, 쿼리가 실패했거나 새로운 노드가 클러스터에 합류했는지 알 수 있다.
+  - 느린 검색 로그(cluster-name_index_search_slowlog.log) - 쿼리가 너무 느리게 실행될 때 일래스틱서치가 로그를 남기는 곳이다. 기본으로 쿼리가 `0.5초` 넘게 걸리면 이곳에 로그를 남긴다.
+  - 느린 색인 로그(cluster-name_index_indexing_slowlog.log) - 느린 검색 로그와 유사하지만 기본으로 색인 작업이 `0.5초` 이상 걸리면 로그를 남긴다.
+  - logging 옵션변경 설정파일 logging.yml ->  `log4j2.properties`
+- 환경 변수나 `elasticsearch.in.sh`에 메모리 설정 조정하기 - 이 파일은 일래스틱서치를 작동시키는 자바 가상 머신(JVM)을 설정하기 위한 것이다.
+  - 실행파일 : `/usr/local/Cellar/elasticsearch/6.8.4/bin/elasticsearch`
+
+## 2.6 클러스터에 노드 추가하기
+
+- 로컬에서 2개 이상의 노드를 시작하려면 elasticsearch.yml 파일의 적당한 위치에 설정값 `node.max_local_storage_nodes: 4`을 추가한다.
+- 노드개수에 따라서 샤드의 활성화여부 및 분배를 확인할 수 있다.
+  - 노드가 1개 일 때
+![노드가 1개 일 때](https://user-images.githubusercontent.com/49108738/69058218-974b9680-0a56-11ea-8d60-e549358178fb.png)
+  - 노드가 2개 일 때
+![노드가 2개 일 때](https://user-images.githubusercontent.com/49108738/69058269-b2b6a180-0a56-11ea-8dbc-f69f76782196.png)
+  - 노드가 3개 일 때 
+![노드가 3개 일 때](https://user-images.githubusercontent.com/49108738/69058370-e09be600-0a56-11ea-95dd-7b29d2fc0d8a.png)
+
+## Chpater03 preview
+- 일래스틱서치에서 효율적으로 데이터를 조직한다
+- 문서가 어떤 종류의 필드를 가질 수 있는지 배운다.
+- 색인, 갱신, 삭제를 위한 모든 관련 옵션에 익숙해진다.
