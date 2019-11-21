@@ -1,5 +1,4 @@
 # Chapter02 기능 들여다보기
-
 - 문서, 타입, 색인 정의하기
 - 일래스틱서치 노드와 주(primary) 및 복제(replica) 샤드 이해하기
 - cURL과 데이터 집합으로 문서 색인하기
@@ -8,8 +7,7 @@
 - 다수의 노드로 작업하기
 
 ## 2.0 Deprecated contents
-
-- 현재 hombrew 패키지를 통하여 설치하면 elastic search version이 `6.8.4`이다. 책에서 소개한 소스코드는 `1.5` 기준이라서 syntax 및 예약어들이 변경이나 deprecated되어 애러가 발생하는 경우가 많다.~~(안 되는게 너무 많다...)~~
+- 현재 hombrew 패키지를 통하여 설치하면 elasticsearch version이 `6.8.4`이다. 책에서 소개한 소스코드는 `1.5` 기준이라서 syntax 및 예약어들이 변경이나 deprecated되어 애러가 발생하는 경우가 많다.~~(안 되는게 너무 많다...)~~
 - 소스코드 다운로드 6.x
 ```bash
 git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
@@ -17,9 +15,9 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 - group 타입이 아니고, `_doc` 타입으로 인덱싱한다.
 - cURL put, post 시에 header를 추가한다.(-H, --header <header/@file> Pass custom header(s) to server)
 `-H'Content-Type: application/json'`
+- `kibana`를 설치하고 검색하자.
 
 ## 2.1 논리적인 배치 이해하기: 문서, 타입, 색인
-
 - 애플리케이션과 관리자의 관점에서 본 일래스틱서치 클러스터
 ![그림2.1](https://user-images.githubusercontent.com/49108738/69000721-77618900-0917-11ea-8141-34b1c6e5c797.png)
 - 일래스틱서치에서 데이터의 논리적 배치: 어떻게 애플리케이션이 데이터를 보는가
@@ -31,7 +29,7 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
   - 문서는 보통 데이터의 JSON(JavaScript Object Notation) 표현이다.
 - 타입
   - 문서에 대한 논리적인 컨테이너다.
-  - 각 타입에서 필드의 정으는 매핑이라고 부른다.
+  - 각 타입에서 필드의 정의는 매핑이라고 부른다.
   - 매핑은 타입에서 지금까지 색인한 모든 문서의 모든 필드를 포함한다.
   - 새로운 필드가 색인되면 자동으로 타입을 추측하여 매핑에 추가한다.
 - 색인
@@ -39,9 +37,9 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
   - 각 색인은 `refresh_interval`이라는 설정으로 새로 색인한 문서를 검색할 수 있도록 간격을 정의한다.(default : 초당 1번)
   
 ## 2.2 물리적 배치 이해하기: 노드와 샤드
-
 - 노드, 주 샤드, 복제(replica) 샤드 이해하기
 ![그림 2.3](https://user-images.githubusercontent.com/49108738/69001070-f8228400-091b-11ea-9b99-ea024bad21cf.png)
+- Default로 일래스틱서치의 각 색인은 5개의 샤드와 1개의 레플리카를 갖는다. 즉, 클러스터가 최소 2개의 노드로 구성되어 있다면, 각 색인은 10개의 샤드가 존재한다.(단, 단일노드의 경우, 레플리카 샤드가 활성화되어 있지 않아서 주 샤드 5개만 활성상태로 존재한다.)
 - 스플릿 브레인(split brain)이란? 클러스터를 구성하고 있는 노드 사이에 네트워크에 단절이 발생하여 마스터 후보 노드(master-eligible node)가 각각 마스터노트로 승격하여 하나의 클러스터가 2개의 sub 클러스터로 나뉘어지는 현상이다. 데이터 비동기화 문제가 발생하게 된다.
 - 문서의 색인은 다음과 같은 과정으로 만들어진다.
   - 문서 ID의 hash 값에 기반하여 주 샤드에 보내진다.
@@ -49,31 +47,42 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 - 색인을 검색할 때는 주 샤드와 복제 샤드에 관계없이 검색로드분배를 통해 실행된다.
 - TF-IDF 스코어링(일래스틱서치의 기본값)
   - TF(term frequency) :  특정한 단어가 문서 내에 얼마나 자주 등장하는지를 나타내는 값
-  - DF(document frequency) : 단어 자체가 문서군 내에서 자주 사용되는 경우, 이것은 그 단어가 흔하게 등장한다는 것을 의미
-  - IDF(inverse document frequency) : DF값의 역수
+  - DF(document frequency) : 단어 자체가 문서군 내에서 자주 사용되는 경우, 이것은 그 단어가 흔하게 등장한다는 것을 의미, 단어가 전체 문서 중에서 몇 개의 문서에서 등장했는지가 중요하지 몇 번 등장했는지는 고려하지 않음. 예를들면 at, in와 같은 전치사는 거의 모든 문서에 등장한다. 이 때 해당 단어는 DF가 높다.
+  - IDF(inverse document frequency) : DF값의 역수, 특정 문서에만 자주 나타나는 단어로 유의미한 단어로 분류할 수 있다.
+  - TF-IDF는 문서에 단어가 얼마나 자주 등장하는지, 그리고 문서 전체를 고려했을 때 단어자체가 갖는 특징과 유의미함의 정도가 높은지에 대한 곱연산으로 스코어링 한다.
 
 ## 2.3 새로운 데이터 색인
-
 - cURL : 다양한 통신 프로토콜을 이용하여 데이터를 전송하기 위한 라이브러리와 명령 줄 도구를 제공하는 컴퓨터 소프트웨어 프로젝트이다.
 - elasticsearch의 데이터 핸들링은 cURL을 통하여 진행한다.
 - 일래스틱서치는 기본값으로 자동으로 색인을 추가하고 타입을 위한 새로운 매핑도 생성한다.
-- 데이터 검색하고 가져오기
-![데이터 검색하고 가져오기](https://user-images.githubusercontent.com/49108738/69001768-9b2ccb00-0927-11ea-83eb-d4f6efdd39b2.png)
 
 ## 2.4 데이터 검색하고 가져오기
-
+- 데이터 검색하고 가져오기
+![데이터 검색하고 가져오기](https://user-images.githubusercontent.com/49108738/69001768-9b2ccb00-0927-11ea-83eb-d4f6efdd39b2.png)
+  - `/get-together/group`
+    - get-together 색인의 group 타입에서 검색한다.
+  - `q=elasticsearch`
+    - "elasticsearch"를 포함한 문서를 찾는다.
+  - `&fields=name,location`
+    - 전체 문서에서 "elasticsearch"를 포함한 문서를 찾지만, 결과는 name과 location 필드만 반환한다. name과 location 필드에서 "elasticsearch" 를 찾는다는 의미가 아님을 주의하자.
+  - `&size=1`
+    - 검색결과가 몇 개 일지라도 `1`개의 결과문서만 반환한다.   
 - 어디를 검색할지 설정하기
+  - 복수개의 타입에서 검색할 때는 `쉼표(,)`로 구분한다.
 ```bash
 % curl "localhost:9200/get-together/group,event/_search\
 ?q=elasticsearch&pretty"
 ```
+  - 타입을 생략하면 전체 타입에서 검색한다.
 ```bash
 % curl 'localhost:9200/get-together/_search?q=sample&pretty'
 ```
+  - 복수개의 인덱스에서 검색할 경우에도 `쉼표(,)`로 구분한다.
 ```bash
 % curl "localhost:9200/get-together,other-index/_search\
 ?q=elasticsearch&pretty"
 ```
+  - 전체 인덱스에서 검색할 때는 인덱스를 생략하여 쿼리한다.
 ```bash
 % curl 'localhost:9200/_search?q=elasticsearch&pretty'
 ```
@@ -81,7 +90,7 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 ![응답내용](https://user-images.githubusercontent.com/49108738/69001974-2b204400-092b-11ea-98d5-e96cae12bb81.png)
 - 적절한 쿼리 선택을 사용하여 검색하기
 - 필터를 사용하여 검색하기
-  - 필트 쿼리는 결과 데이터에 대하여 scoring 하지 않는다.
+  - 필터 쿼리는 결과 데이터에 대하여 scoring 하지 않는다.
   - 다른 쿼리보다 빠르고 쉽게 캐시에 저장할 수 있다.
   - 점수가 없기 때문에 필터 결과는 점수에 의해 정렬되지 않는다.
 - 집계 적용하여 검색하기
@@ -91,7 +100,6 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 - 문서가 존재하지 않으면 found feild의 value가 `false`다.
 
 ## 2.5 일래스틱서치 설정하기
-
 ```bash
 brew info elasticsearch
 ```
@@ -102,12 +110,11 @@ brew info elasticsearch
   - 메인 로그(cluster-name.log) - 일래스틱서치가 동작 중일 때 무슨 일이 일어났는지에 관한 일반적인 정보를 알 수 있다. 예를 들어, 쿼리가 실패했거나 새로운 노드가 클러스터에 합류했는지 알 수 있다.
   - 느린 검색 로그(cluster-name_index_search_slowlog.log) - 쿼리가 너무 느리게 실행될 때 일래스틱서치가 로그를 남기는 곳이다. 기본으로 쿼리가 `0.5초` 넘게 걸리면 이곳에 로그를 남긴다.
   - 느린 색인 로그(cluster-name_index_indexing_slowlog.log) - 느린 검색 로그와 유사하지만 기본으로 색인 작업이 `0.5초` 이상 걸리면 로그를 남긴다.
-  - logging 옵션변경 설정파일 logging.yml ->  `log4j2.properties`
+  - logging 옵션변경 설정파일 logging.yml -> `log4j2.properties`
 - 환경 변수나 `elasticsearch.in.sh`에 메모리 설정 조정하기 - 이 파일은 일래스틱서치를 작동시키는 자바 가상 머신(JVM)을 설정하기 위한 것이다.
   - 실행파일 : `/usr/local/Cellar/elasticsearch/6.8.4/bin/elasticsearch`
 
 ## 2.6 클러스터에 노드 추가하기
-
 - 로컬에서 2개 이상의 노드를 시작하려면 elasticsearch.yml 파일의 적당한 위치에 설정값 `node.max_local_storage_nodes: 4`을 추가한다.
 - 노드개수에 따라서 샤드의 활성화여부 및 분배를 확인할 수 있다.
   - 노드가 1개 일 때
