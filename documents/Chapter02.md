@@ -47,7 +47,7 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
 - 색인을 검색할 때는 주 샤드와 복제 샤드에 관계없이 검색로드분배를 통해 실행된다.
 - TF-IDF 스코어링(일래스틱서치의 기본값)
   - TF(term frequency) :  특정한 단어가 문서 내에 얼마나 자주 등장하는지를 나타내는 값
-  - DF(document frequency) : 단어 자체가 문서군 내에서 자주 사용되는 경우, 이것은 그 단어가 흔하게 등장한다는 것을 의미, 단어가 전체 문서 중에서 몇 개의 문서에서 등장했는지가 중요하지 몇 번 등장했는지는 고려하지 않음. 예를들면 at, in와 같은 전치사는 거의 모든 문서에 등장한다. 이 때 해당 단어는 DF가 높다.
+  - DF(document frequency) : 단어 자체가 문서군 내에서 자주 사용되는 경우, 이것은 그 단어가 흔하게 등장한다는 것을 의미한다. 다시말하면, 단어가 전체 문서 중에서 몇 개의 문서에서 등장했는지가 중요하고, 몇 번 등장했는지는 중요하지 않다. 예를들면 at, in와 같은 전치사는 거의 모든 문서에 등장한다. 이 때 해당 단어는 DF값이 크다.
   - IDF(inverse document frequency) : DF값의 역수, 특정 문서에만 자주 나타나는 단어로 유의미한 단어로 분류할 수 있다.
   - TF-IDF는 문서에 단어가 얼마나 자주 등장하는지, 그리고 문서 전체를 고려했을 때 단어자체가 갖는 특징과 유의미함의 정도가 높은지에 대한 곱연산으로 스코어링 한다.
 
@@ -67,22 +67,21 @@ git clone https://github.com/dakrone/elasticsearch-in-action.git -b 6.x
     - 전체 문서에서 "elasticsearch"를 포함한 문서를 찾지만, 결과는 name과 location 필드만 반환한다. name과 location 필드에서 "elasticsearch" 를 찾는다는 의미가 아님을 주의하자.
   - `&size=1`
     - 검색결과가 몇 개 일지라도 `1`개의 결과문서만 반환한다.   
-- 어디를 검색할지 설정하기
-  - 복수개의 타입에서 검색할 때는 `쉼표(,)`로 구분한다.
+- 복수개의 타입에서 검색할 때는 `쉼표(,)`로 구분한다.
 ```bash
 % curl "localhost:9200/get-together/group,event/_search\
 ?q=elasticsearch&pretty"
 ```
-  - 타입을 생략하면 전체 타입에서 검색한다.
+- 타입을 생략하면 전체 타입에서 검색한다.
 ```bash
 % curl 'localhost:9200/get-together/_search?q=sample&pretty'
 ```
-  - 복수개의 인덱스에서 검색할 경우에도 `쉼표(,)`로 구분한다.
+- 복수개의 인덱스에서 검색할 경우에도 `쉼표(,)`로 구분한다.
 ```bash
 % curl "localhost:9200/get-together,other-index/_search\
 ?q=elasticsearch&pretty"
 ```
-  - 전체 인덱스에서 검색할 때는 인덱스를 생략하여 쿼리한다.
+- 전체 인덱스에서 검색할 때는 인덱스를 생략하여 쿼리한다.
 ```bash
 % curl 'localhost:9200/_search?q=elasticsearch&pretty'
 ```
