@@ -129,9 +129,9 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
 ## update api
 - 특정스크림트를 사용하여 doc을 업데이트한다
 
-'''
+```
 POST /<index>/_update/<_id>
-'''
+```
 스크립트로 update, delete 또는 skip 가능하다. 
 
 변경방법
@@ -150,25 +150,27 @@ Upserting
 _source 필드는 update사용을 가능하게 하고, ctx 맵을 사용하여, _index, _type, _id, _version, _routing, _now 변수에 접근가능하다
 
 우선, 데이타를 생성한다. 
+```
 PUT test/_doc/1
 {
     "counter" : 1,
     "tags" : ["red"]
 }
-
+```
 
 문서에서 일부분을 업데이트 하기
+```
 POST test/_update/1
 {
     "doc" : {
         "name" : "new_name"
     }
 }
-
+```
 - 이는 업데이트 된 결과가 없을 경우, 업데이트시 결과에 noop을  발견할 수 있다 .
 
 noop 이 안나오게 disable가능하다
-
+```
 POST test/_update/1
 {
     "doc" : {
@@ -176,11 +178,12 @@ POST test/_update/1
     },
     "detect_noop": false
 }
-
+```
 
 Upsert
 
 doc 의 내용을 upsert 할 수 있다
+```
 POST test/_update/1
 {
     "doc" : {
@@ -202,9 +205,10 @@ POST test/_update/1
         "counter" : 1
     }
 }
-
+```
 
 스크립트로 upsert 하기 (문서가 존재하던 말던 여부에 상관없이 - scripted_upsert:true)
+```
 POST sessions/_update/dh3sgudg8gsrgl
 {
     "scripted_upsert":true,
@@ -220,10 +224,11 @@ POST sessions/_update/dh3sgudg8gsrgl
     },
     "upsert" : {}
 }
-
+```
 
 
 스크립트를 사용하여 update 하는 방법 
+```
 POST test/_update/1
 {
     "script" : {
@@ -245,8 +250,9 @@ POST test/_update/1
         }
     }
 }
-
+```
 도큐먼트에 있는 필드들을 스크립트를 통해서 더하고 지울수 있다 
+```
 POST test/_update/1
 {
     "script" : "ctx._source.new_field = 'value_of_new_field'"
@@ -256,13 +262,14 @@ POST test/_update/1
 {
     "script" : "ctx._source.remove('new_field')"
 }
-
+```
 
 
 
 
 ## delete api
 - 특정 index로 json doc을 지운다. 
-
+```
 delete /<index>/_doc/<_id>
+```
 DELETE /twitter/_doc/1
