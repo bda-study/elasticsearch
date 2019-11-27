@@ -14,6 +14,11 @@
 - Predefined : 메타데이타  ex) _ttl, _timestamp  (_ttl : 일정시간 후 도큐먼트들을 삭제) 
                이런필드들은 엘라스틱 서치에 의해서 자동적으로 관리되어질 수 있는 메타데이타로 생각하면 된다.
 
+(
+  Single type : text, keyword, date, long, double, boolean or ip
+  Json의 계층적인 속성 : object, nested
+  특별한 타입 : geo_point, geo_shape, completion
+)
 
 ## 3.1 매핑들을 사용해서 다양한 종류의 도큐먼트들을 정의하라
 각 document은 type에 속해 있고, 이들은 각각의 index에 속해있다  (type은. 7.0 이상 상위버전부터 deprecated)
@@ -55,9 +60,17 @@ PUT get-together/_mapping/
 
 
 ## 3.2.1 string  - text, keyword로 사용
+   keyword를 사용하면, 필드는 analysed가 안되고, 대소문자 구분하여 정확한 매칭을 요구하지만. 
+   text 필드타입을 사용하면, analysed가 되고, 대소문자 구분이 없다. (디폴트 analyzer 사용시)
    Analysis를 한다 Analysis 는 관련된 서치를 만들기 위해 
     엘레먼트들을 쪼개고 텍스트를 파싱하는 과정이다. Term 이라는 용어는 서칭하기 위해 가장 기본적인 단위이며 텍스트에서 추출된 용어이다.
   
+   같은 필드를 다른 목적과 다른 방식으로 인덱스하는데 사용되어진다. 예를 들어, string 필드는
+   String 필드는 text 필드로 사용되어지는 데 이는 전체텍스트 서치에 대해 텍스트 필드로 인덱스 되어질 수 있고, 
+   소팅이나 aggregations 에 대해서 keyword 필드로 사용되어진다. 
+   이것 멀티 필드들의 목적이다. 대부분 데이타타입들은 멀티필드들을 지원한다
+
+
     그림. 그리고, 용어들의 동의어를 만들어 낼 수 있게 분석방법을 설정할 수 있다. 
   Analysis 프로세스는 매핑안에서 분석하기 위해 여러가지 옵션들로 구성된다. 
 
@@ -74,7 +87,7 @@ PUT get-together/_mapping/
     인덱싱이 스킵되고 어떠한 terms 도 만들어지지 않고, 특정필드 서칭이 불가하다. 이는 인덱스하고 서치하는 데 필요한 공간을 절약하고 시간을 줄여준다. 물론, 
     생각하고 사용해야하며, 이후버전에서는 없음
     
-    ---> 변경
+   --> index = true/false 서칭되어짐. 
     ````
     PUT blog/posts1/1
     {
