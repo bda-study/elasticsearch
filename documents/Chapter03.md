@@ -493,6 +493,23 @@ POST test/_update/1
 }
 ```
 
+* concurrency control
+그림 3.5
+해결방법 : 
+1. 버전충돌시, 업데이트를 다시 하던지 또는 자동으로 재시도하는 옵션을 사용 retry_on_conflict
+````
+% SHIRTS="localhost:9200/online-shop/shirts"
+% curl -XPOST "$SHIRTS/1/_update?retry_on_conflict=3" -d '{
+    "script": "ctx._source.price = 2"
+}'
+````
+2. 버젼을 명시하고 버젼이 맞으면 업데이트를 하도록 한다. 
+````
+% curl -XPUT 'localhost:9200/online-shop/shirts/1?version=3' -d '{ "caption": "I Know about Elasticsearch Versioning",
+"price": 5
+}'
+````
+
 
 ## 3.6 delete api
 - 특정 index로 json doc을 지운다. 
