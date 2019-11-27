@@ -45,7 +45,7 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
   필드는 코어타입들 또는 복합적인 타입(예, 배열), nested type(도큐먼트내 도큐먼트) or geo_point (지구상의 위도경도위치, 내장된 필드) type
 
 
-## 3.2.1 string  (text, keyword로 사용됨)
+## 3.2.1 string  - text, keyword로 사용
   
   
 
@@ -58,13 +58,13 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
                     엘레먼트들을 쪼개고 텍스트를 파싱하는 과정이다. Term 이라는 용어는 서칭하기 위해 가장 기본적인 단위이며 텍스트에서 추출된 용어이다. )
   
   ex.
-  if index = analyzed
+  * if index = analyzed
     “Elasticsearch” 라고 searching 하면 “Late night with Elasticsearch” 를 결과로 기대할 것임
 
-  if index = not_analyzed - 전체 용어가 매칭되어야지만 서칭이 된다. (대소문자도 구분해서 서칭함)
+  * if index = not_analyzed - 전체 용어가 매칭되어야지만 서칭이 된다. (대소문자도 구분해서 서칭함)
     “Big data”, 1. Data 로 서치 2, Big data 로 서칭 시 결과는 다름.
 
-  if index = no 
+  * if index = no 
     인덱싱이 스킵되고 어떠한 terms 도 만들어지지 않고, 특정필드 서칭이 불가하다. 이는 인덱스하고 서치하는 데 필요한 공간을 절약하고 시간을 줄여준다. 물론, 
     생각하고 사용해야하며, 이후버전에서는 없음
  
@@ -75,8 +75,9 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
   루슨 인덱스내에서 Date 타입은 string으로 파싱하고+long 타입으로 저장. 
   Date string의 데이트 포맷은 포맷옵션으로 정해지고 디폴트로 iso 8601
 
-  ex. predefiend date format : 2019-02-22
-      Custom format ex. MMM YYYY : Jul 2001
+  ex. 
+  * predefiend date format : 2019-02-22
+  * Custom format ex. MMM YYYY : Jul 2001
 
 ## 3.2.4 Boolean
   true/false
@@ -127,27 +128,11 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
 
 
 ## update api
-- 특정스크림트를 사용하여 doc을 업데이트한다
 
-```
-POST /<index>/_update/<_id>
-```
-스크립트로 update, delete 또는 skip 가능하다. 
+1. 기존문서의 필드값을 변경할 수 있고, 
+2. 스크립트를 사용해서 변경
+3. Upserting
 
-변경방법
-기존문서의 필드값을 변경할 수 있고, 
-스크립트를 사용해서 변경
-Upserting
-
-기존 존재하는 doc에 머징기능이 가능하고, 기존문서를 완전히 변경가능하다. 
-
-동작방법
-1. 인덱스로 도큐먼트를 가져온다
-2. 지정된 스크립트를 실행시킨다
-3. 결과를 인덱스한다. 
-
-
-_source 필드는 update사용을 가능하게 하고, ctx 맵을 사용하여, _index, _type, _id, _version, _routing, _now 변수에 접근가능하다
 
 우선, 데이타를 생성한다. 
 ```
@@ -158,7 +143,7 @@ PUT test/_doc/1
 }
 ```
 
-문서에서 일부분을 업데이트 하기
+- 문서에서 일부분을 업데이트 하기
 ```
 POST test/_update/1
 {
@@ -167,7 +152,7 @@ POST test/_update/1
     }
 }
 ```
-- 이는 업데이트 된 결과가 없을 경우, 업데이트시 결과에 noop을  발견할 수 있다 .
+이는 업데이트 된 결과가 없을 경우, 업데이트시 결과에 noop을  발견할 수 있다 .
 
 noop 이 안나오게 disable가능하다
 ```
@@ -180,9 +165,8 @@ POST test/_update/1
 }
 ```
 
-Upsert
-
-doc 의 내용을 upsert 할 수 있다
+- Upsert
+* doc 의 내용을 upsert 할 수 있다
 ```
 POST test/_update/1
 {
@@ -207,7 +191,7 @@ POST test/_update/1
 }
 ```
 
-스크립트로 upsert 하기 (문서가 존재하던 말던 여부에 상관없이 - scripted_upsert:true)
+* 스크립트로 upsert 하기 (문서가 존재하던 말던 여부에 상관없이 - scripted_upsert:true)
 ```
 POST sessions/_update/dh3sgudg8gsrgl
 {
@@ -227,7 +211,21 @@ POST sessions/_update/dh3sgudg8gsrgl
 ```
 
 
-스크립트를 사용하여 update 하는 방법 
+- 특정스크립트를 사용하여 doc을 업데이트한다
+
+```
+POST /<index>/_update/<_id>
+```
+스크립트로 update, delete 또는 skip 가능하다. 
+* 기존 존재하는 doc에 머징기능이 가능하고, 기존문서를 완전히 변경가능하다. 
+동작방법
+1. 인덱스로 도큐먼트를 가져온다
+2. 지정된 스크립트를 실행시킨다
+3. 결과를 인덱스한다. 
+_source 필드는 update사용을 가능하게 하고, ctx 맵을 사용하여, _index, _type, _id, _version, _routing, _now 변수에 접근가능하다
+
+
+* 스크립트를 사용하여 update 하는 방법 
 ```
 POST test/_update/1
 {
@@ -251,7 +249,8 @@ POST test/_update/1
     }
 }
 ```
-도큐먼트에 있는 필드들을 스크립트를 통해서 더하고 지울수 있다 
+
+* 도큐먼트에 있는 필드들을 스크립트를 통해서 더하고 지울수 있다 
 ```
 POST test/_update/1
 {
@@ -263,8 +262,6 @@ POST test/_update/1
     "script" : "ctx._source.remove('new_field')"
 }
 ```
-
-
 
 
 ## delete api
