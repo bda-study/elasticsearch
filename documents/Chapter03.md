@@ -522,6 +522,15 @@ POST sessions/_update/dh3sgudg8gsrgl
 
 * concurrency control
   그림 3.5
+  
+  optimistic concurrency control
+  - 도큐먼트에 마지막 변경내용이 if_seq_no, if_primary_term 파라미터들에 의해 지정된 시퀀스 번호와 primary term으로 할당되어있다.
+    mismatch가 발견되면 VersionConflictException, 409
+    (오직, 이 시퀀스 번호가 존재하고 primary term을 가진다면 동작을 수행한다. )
+  "_seq_no" : 4,
+  "_primary_term" : 1,
+
+
   해결방법 : 
   1. 버전충돌시, 업데이트를 다시 하던지 또는 자동으로 재시도하는 옵션을 사용 retry_on_conflict
   ````
@@ -532,7 +541,8 @@ POST sessions/_update/dh3sgudg8gsrgl
   ````
   2. 버젼을 명시하고 버젼이 맞으면 업데이트를 하도록 한다. 
   ````
-  % curl -XPUT 'localhost:9200/online-shop/shirts/1?version=3' -d '{ "caption": "I Know about Elasticsearch Versioning",
+  % curl -XPUT 'localhost:9200/online-shop/shirts/1?version=3' -d 
+  '{ "caption": "I Know about Elasticsearch Versioning",
   "price": 5
   }'
   ````
