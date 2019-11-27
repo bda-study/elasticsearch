@@ -31,7 +31,7 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
 (새로운 매핑은 인덱스를 생성한 후, 그리고, 그 타입으로 어떠한 도큐먼트를 인서트하기전에 정의를 할 수 있다)
 
 
-###### 3.2 기존 매핑을 확장하기
+## 3.2 기존 매핑을 확장하기
 이미 매핑이 있다면 머지한다. 
 하지만, 기존 필드의 데이타 타입을 변경할 수 없다 (MergeMappingException). 즉, 필드에 대해 인덱스 되어지는 방식을 변경할 수 없다
 
@@ -41,16 +41,16 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
   3. 다시 모든 데이타를 인덱스한다. 
 
 
-3.2 core types
+## 3.2 core types
   필드는 코어타입들 또는 복합적인 타입(예, 배열), nested type(도큐먼트내 도큐먼트) or geo_point (지구상의 위도경도위치, 내장된 필드) type
 
 
-3.2.1 string  (text, keyword로 사용됨)
+## 3.2.1 string  (text, keyword로 사용됨)
   
   
 
 
-3.2 그림. 그리고, 용어들의 동의어를 만들어 낼 수 있게 분석방법을 설정할 수 있다. 
+## 3.2 그림. 그리고, 용어들의 동의어를 만들어 낼 수 있게 분석방법을 설정할 수 있다. 
   Analysis 프로세스는 매핑안에서 분석하기 위해 여러가지 옵션들로 구성된다. 
 
   Index 옵션에 analyzed , not analyzed, no 로 셋팅할 수 있다.  (6.x 이후부터는 다르게 사용됨)
@@ -68,30 +68,30 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
     인덱싱이 스킵되고 어떠한 terms 도 만들어지지 않고, 특정필드 서칭이 불가하다. 이는 인덱스하고 서치하는 데 필요한 공간을 절약하고 시간을 줄여준다. 물론, 
     생각하고 사용해야하며, 이후버전에서는 없음
  
-3.2.2 numeric
+## 3.2.2 numeric
   Byte, short, integer, long, double : 자바의 primitive data type 과 동일
 
-3.2.3  date
+## 3.2.3  date
   루슨 인덱스내에서 Date 타입은 string으로 파싱하고+long 타입으로 저장. 
   Date string의 데이트 포맷은 포맷옵션으로 정해지고 디폴트로 iso 8601
 
   ex. predefiend date format : 2019-02-22
       Custom format ex. MMM YYYY : Jul 2001
 
-3.2.4 Boolean
+## 3.2.4 Boolean
   true/false
 
-3.2.5 arrays and mult-fields
+## 3.2.5 arrays and mult-fields
   필드내 다중 값들을 인덱스 하기 위해, [] 를 사용해서 값들을 열거한다.
   Array 필드는 스트링처럼 필드를 정의하고, 특별히 배열로 정의되는 방식은 없다
   String 의 싱글필드가 하는 것처럼 Tags: { “type” : “string” } 하고, 값을 [] 를 이용해서 동일 데이타 타입으로 열거하는 방식. 
 
-3.3.2 
+## 3.3.2 
   멀티필드는 같은 데이타를 다른 방식으로 여러번 인덱싱하는 방식이다. 
   
   
   
-3.4 predefined fields 를 사용하라
+## 3.4 predefined fields 를 사용하라
   _ 로 시작하는 필드이름들, 도큐먼트들에 대한 새로운 메타데이타이다. 
   _timestamp : 도큐먼트가 인덱스되어졌을때 date를 기록하는 필드
   _ttl  : 특정 시간 후에 도큐먼트들을 제거하는 필드
@@ -103,7 +103,7 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
   _all field : 도큐먼트내에 함계 인덱스 되어지는 모든 필드들 
 
 
-3.4.1  도큐먼트들을 저장하고 서치하는 방법을 제어하기
+## 3.4.1  도큐먼트들을 저장하고 서치하는 방법을 제어하기
   _all : 싱글 필드내에 모든 내용들을 인덱스하게 함
   _source : 인덱스시 패스되어지는 json doc body이고, 그 자체는 index 와 서칭이 안되지만, 이는 저장되고, fetch request , get, search 같은, 
             실행되어질 때 리턴되어진다. 스토리지 과부하를 초래할 수도 있지만,  disable 하게 된다면, update, update_by_query, reindex 등 
@@ -126,11 +126,12 @@ mapping내에서 각 필드의 정의를 포함하고, mapping은 도큐먼트�
 
 
 
-update api
+## update api
 - 특정스크림트를 사용하여 doc을 업데이트한다
 
-사용법 : POST /<index>/_update/<_id>
-
+'''
+POST /<index>/_update/<_id>
+'''
 스크립트로 update, delete 또는 skip 가능하다. 
 
 변경방법
@@ -260,7 +261,7 @@ POST test/_update/1
 
 
 
-delete api
+## delete api
 - 특정 index로 json doc을 지운다. 
 
 delete /<index>/_doc/<_id>
