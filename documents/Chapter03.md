@@ -60,15 +60,8 @@ PUT get-together/_mapping/
 
 
 ## 3.2.1 string  - text, keyword로 사용
-   keyword를 사용하면, 필드는 analysed가 안되고, 대소문자 구분하여 정확한 매칭을 요구하지만. 
-   text 필드타입을 사용하면, analysed가 되고, 대소문자 구분이 없다. (디폴트 analyzer 사용시)
    Analysis를 한다 Analysis 는 관련된 서치를 만들기 위해 
     엘레먼트들을 쪼개고 텍스트를 파싱하는 과정이다. Term 이라는 용어는 서칭하기 위해 가장 기본적인 단위이며 텍스트에서 추출된 용어이다.
-  
-   같은 필드를 다른 목적과 다른 방식으로 인덱스하는데 사용되어진다. 예를 들어, string 필드는
-   String 필드는 text 필드로 사용되어지는 데 이는 전체텍스트 서치에 대해 텍스트 필드로 인덱스 되어질 수 있고, 
-   소팅이나 aggregations 에 대해서 keyword 필드로 사용되어진다. 
-   이것 멀티 필드들의 목적이다. 대부분 데이타타입들은 멀티필드들을 지원한다
 
 
     그림. 그리고, 용어들의 동의어를 만들어 낼 수 있게 분석방법을 설정할 수 있다. 
@@ -88,7 +81,7 @@ PUT get-together/_mapping/
     생각하고 사용해야하며, 이후버전에서는 없음
     
    --> index = true/false 서칭되어짐. 
-    ````
+   ````
     PUT blog/posts1/1
     {
       "tags" : ["first","initial"]
@@ -104,7 +97,7 @@ PUT get-together/_mapping/
     }
     
     GET blog/_search/3
-    ````
+   ````
  
 ## 3.2.2 numeric
   Byte, short, integer, long, double : 자바의 primitive data type 과 동일
@@ -129,10 +122,50 @@ PUT get-together/_mapping/
 
 
 ## 3.3.2 
-  멀티필드는 같은 데이타를 다른 방식으로 여러번 인덱싱하는 방식이다. 
+
+멀티필드는 같은 데이타를 다른 방식으로 여러번 인덱싱하는 방식이다. 
+  strings는 text 와 keyword로 인덱스 되어지는데 즉, 같은 string을 여러번 인덱스함. 이를 멀티필드라고 함. 
+  예를 들어, title : cloud elastic service 라고 하면
+  text 필드타입을 사용하면, analysed가 되고, 대소문자 구분이 없다. (디폴트 analyzer 사용시)
+  keyword는 full text searching을 함. 필드는 analysed가 안되고, 대소문자 구분하여 정확한 매칭을 요구함. 풀매칭을 원하거나,
+  sorting or aggregations를 원할때 사용
+  이것 멀티 필드들의 목적이다. string을 인덱싱하지 않고 다른 방식으로 사용할수 있기때문에 멀티필드를 지원한다. 
+
+  엘라스틱서치는 무슨 용도로 사용할려는 지 모르기때문에, text 타입으로 string을 분석하고, keyword 멀티필드를 생성한다 
+  대부분 데이타타입들은 멀티필드들을 지원한다
+   
+  ````
+  PUT test
   
-  
-  
+  PUT test/_doc/1
+  {
+    "name": "first Elasticsearch",
+    "date": "2013-11-25T19:00"
+  }
+  ````
+  결과 : 
+  ````
+  {
+    "test" : {
+      "mappings" : {
+        "properties" : {
+          "date" : {
+            "type" : "date"
+          },
+          "name" : {
+            "type" : "text",
+            "fields" : {
+              "keyword" : {
+                "type" : "keyword",
+                "ignore_above" : 256
+              }
+            }
+          }
+        }
+      }
+   }
+ }
+  ````
 ## 3.4 predefined fields 를 사용하라
   _ 로 시작하는 필드이름들, 도큐먼트들에 대한 새로운 메타데이타이다. 
   _timestamp : 도큐먼트가 인덱스되어졌을때 date를 기록하는 필드
