@@ -4,3 +4,5 @@
   - https://nbviewer.jupyter.org/gist/SDRLurker/089f3a08de46771358d9b6706ea5cdd0
 * 3장 데이터 색인, 변경, 삭제
   - https://nbviewer.jupyter.org/gist/SDRLurker/9bfdfa3b4b9eea8f493f8f948d688069
+* 4장 데이터 검색
+  - https://nbviewer.jupyter.org/gist/SDRLurker/39a758b1d21eea38877dffffef8692bb
