@@ -6,3 +6,5 @@
   - https://nbviewer.jupyter.org/gist/SDRLurker/9bfdfa3b4b9eea8f493f8f948d688069
 * 4장 데이터 검색
   - https://nbviewer.jupyter.org/gist/SDRLurker/39a758b1d21eea38877dffffef8692bb
+* 5장 데이터 분석
+  - https://nbviewer.jupyter.org/gist/SDRLurker/0a0941bf295225b161db37d6088ef02e
