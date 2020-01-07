@@ -8,3 +8,5 @@
   - https://nbviewer.jupyter.org/gist/SDRLurker/39a758b1d21eea38877dffffef8692bb
 * 5장 데이터 분석
   - https://nbviewer.jupyter.org/gist/SDRLurker/0a0941bf295225b161db37d6088ef02e
+* 6장 유사도 검색
+  - https://nbviewer.jupyter.org/gist/SDRLurker/03f2e153e4ab58c9a47630f34ff78a5f
