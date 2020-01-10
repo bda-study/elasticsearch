@@ -1,0 +1,448 @@
+# 244p
+PUT get-together/_doc/title
+{
+  "mappings": {
+    "properties": {
+      "field": {
+        "type": "text",
+        "similarity": "BM25"
+      }
+    }
+  }
+}
+
+# 245p
+#DELETE /index
+PUT /index
+{
+    "settings" : {
+        "index" : {
+            "similarity" : {
+              "my_custom_similarity" : {
+                "type" : "BM25",
+                "k1": 1.2,
+                "b": 0.75,
+                "discount_overlaps": false
+              }
+            }
+        }
+    }
+}
+
+# 248p
+#DELETE get-together
+PUT get-together
+{
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "name": {
+          "boost": 2.0,
+          "type": "text"
+        }
+      }
+    }
+  }
+}
+
+# 249p
+POST get-together/_search
+{
+  "query": {
+    "bool" : {
+      "should": [{
+        "match": { 
+          "description": {
+            "query": "elasticsearch big data",
+            "boost": 2.5
+          }
+        }
+      },
+      {
+        "match": {
+          "name": {
+            "query": "elasticsearch big data"
+          }
+        }
+      }]
+    }
+  }
+}
+
+# 250p
+POST get-together/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "elasticsearch big data",
+      "fields" : ["name", "description"],
+      "boost": 2.5
+    }
+  }
+}
+
+# 251p
+POST get-together/_search
+{
+  "query": {
+    "multi_match": {
+      "query": "elasticsearch big data",
+      "fields" : ["name^3", "description"]
+    }
+  }
+}
+
+POST get-together/_search
+{
+  "query": {
+    "query_string": {
+      "query": "elasticsearch^3 AND \"big data\""
+    }
+  }
+}
+
+# 252p
+POST get-together/_search
+{
+  "query": {
+    "match": {
+      "description": "elasticsearch"
+    }
+  }, 
+  "explain": true
+}
+
+# 255p
+POST get-together/_doc/4/_explain
+{
+  "query": {
+    "match": {
+      "description": "elasticsearch"
+    }
+  }
+}
+
+# 256p
+POST get-together/_search
+{
+  "query":{
+    "match":{
+      "title": "elasticsearch"
+    }
+  },
+  "rescore": {
+    "window_size": 20,
+    "query": {
+      "rescore_query":{
+        "match_phrase":{
+          "title":{
+            "query":"elasticsearch hadoop",
+            "slop":5
+          }
+        }
+      },
+      "query_weight": 0.8,
+      "rescore_query_weight": 1.3
+    }
+  }
+}
+
+# 257p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[]
+    }
+  }
+}
+
+# 258p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[{
+        "weight": 1.5,
+        "filter": {
+          "term": {
+            "description": "hadoop"
+          }
+        }
+      }]
+    }
+  }
+}
+
+# 260p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[{ 
+        "weight": 2,
+        "filter": {
+          "term": {
+            "description": "hadoop"
+          }
+        }
+      }, { 
+        "weight": 3,
+        "filter": {
+          "term": {
+            "description": "logstash"
+          }
+        }
+      }]
+    }
+  }
+}
+
+# 262p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[{
+        "field_value_factor": {
+          "field": "reviews",
+          "factor": 2.5,
+          "modifier": "ln",
+          "missing": 1 
+        }
+      }]
+    }
+  }
+}
+
+# 263p
+# 실패
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[{
+        "script_score": {
+          "script":{
+            "source":"Math.log(doc['attendees'].values.size() * 3)",
+            "params": {"myweight": 3}
+          }
+        }
+      }],
+      "boost_mode": "replace"
+    }
+  }
+}
+
+# 264p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match": {
+          "description": "elasticsearch"
+        }
+      },
+      "functions":[{
+        "random_score": {
+          "seed": 1234
+        }
+      }]
+    }
+  }
+}
+
+# 268p
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match_all": {}
+      },
+      "functions":[{
+        "gauss": {
+          "location_event.geolocation": {
+            "origin": "40.018528, -105.275806",
+            "offset": "100m",
+            "scale": "2km",
+            "decay": 0.5
+          }
+        }
+      }]
+    }
+  }
+}
+
+# 269p
+# 실패
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match_all": {}
+      },
+      "functions":[{
+        "weight": 1.5,
+        "filter": {
+          "term": {
+            "description": "hadoop"
+          }
+        }
+      }, {
+        "field_value_factor": {
+          "field": "reviews",
+          "factor": 10.5,
+          "modifier":"log1p"
+        }
+      }, {
+        "script_score": {
+          "script":"Math.log(doc['attendees'].values.size() * 3)",
+          "params": {"myweight": 3}
+        }
+      }, {
+        "gauss": {
+          "location_event.geolocation": {
+            "origin": "40.018528, -105.275806", 
+            "offset": "100m", 
+            "scale": "2km", 
+            "decay": 0.5
+          }
+        }
+      }],
+      "score_mode": "sum",
+      "boost_mode": "replace"
+    }
+  }
+}
+
+POST get-together/_search
+{
+  "query":{
+    "function_score": {
+      "query": {
+        "match_all": {}
+      },
+      "functions":[{
+        "weight": 1.5,
+        "filter": {
+          "term": {
+            "description": "hadoop"
+          }
+        }
+      }, {
+        "field_value_factor": {
+          "field": "reviews",
+          "factor": 10.5,
+          "modifier":"log1p",
+          "missing": 1
+        }
+      }, {
+        "gauss": {
+          "location_event.geolocation": {
+            "origin": "40.018528, -105.275806", 
+            "offset": "100m", 
+            "scale": "2km", 
+            "decay": 0.5
+          }
+        }
+      }],
+      "score_mode": "sum",
+      "boost_mode": "replace"
+    }
+  }
+}
+
+# 271p
+PUT get-together/_mapping/_doc
+{
+ "properties": {
+   "attendees": {
+     "type": "text",
+     "fielddata": true,
+     "eager_global_ordinals": true
+   }
+ }
+}
+POST get-together/_doc/_search
+{
+  "query":{
+    "match": {
+      "description": "elasticsearch"
+    }
+  },
+  "sort": [{
+    "_script": {
+      "type": "number",
+      "script": {
+        "source":"doc['attendees'].values.size()"
+      },
+      "order": "desc"
+    }
+  },
+  "_score"
+  ]
+}
+
+# 273p
+PUT get-together/_mapping/_doc
+{
+ "properties": {
+   "title": {
+     "type": "text",
+     "fielddata": true,
+     "eager_global_ordinals": true
+   }
+ }
+}
+
+# 276p
+PUT _cluster/settings
+{
+  "transient": {
+    "indices.breaker.fielddata.limit": "350mb"
+  }
+}
+
+# 279p
+DELETE myindex
+PUT myindex
+{
+  "mappings": {
+    "document":{
+      "properties": {
+        "title": { 
+          "type": "keyword",
+          "doc_values": true
+        }
+      }
+    }
+  }
+}
