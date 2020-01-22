@@ -1122,6 +1122,8 @@ curl "$URI?pretty&search_type=count" -d '{
 
 ## 7.4 중첩 집계
 
+- 다중 버킷 집계는 일반적으로 집계를 중첩하는 시작 지점이다.
+
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig10_alt.jpg)
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig11_alt.jpg)
