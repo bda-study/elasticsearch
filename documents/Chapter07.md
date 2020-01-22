@@ -1124,11 +1124,23 @@ curl "$URI?pretty&search_type=count" -d '{
 
 - 다중 버킷 집계는 일반적으로 집계를 중첩하는 시작 지점이다.
 
-- ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig10_alt.jpg)
+- 각 버킷에 대해 하위 집계를 사용하여 다른 지표를 볼 수 있다.
 
-- ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig11_alt.jpg)
+- 아래 그림에서 각 태그에 대해 매달 얼마나 많은 그룹이 생성되었는지를 볼 수 있다.
+  - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig10_alt.jpg)
+
+- result grouping : 부모 집계로부터 생성된 각 문서의 버킷에서 상위 N개의 결과를 가지고 올 수 있다.
+
+- 범주를 보여 주고 상위 3개의 결과를 보여 준다.
+  - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig11_alt.jpg)
 
 ### 7.4.1 다중 버킷 집계 중첩
+
+- aggregation, aggs 키를 부모 집계와 같은 레벨에서 사용하면된다.
+
+- 버킷 집계 안에서 지표 집계를 중첩할 수 있다.
+
+- top_hits : 사용자가 설정한 점수를 기반으로 부모 집계의 각 버킷을 정렬하여 상위 N개의 결과를 돌려준다.
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex15-0.jpg)
 
@@ -1137,12 +1149,25 @@ curl "$URI?pretty&search_type=count" -d '{
 
 ### 7.4.2 결과를 그룹 지어 가지고 오는 중첩 집계
 
+- 결과를 묶어서 보는 건 상위 결과를 범주별로 묶어서 보려고 할 때 유용하다.
+
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex16-0.jpg)
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex16-1.jpg)
 
+- global 집계는 다른 집계에 동작하기 위해 문서의 집합을 변경하는 단일 버킷 집계
 
 ### 7.4.3 단일 버킷 집계 사용하기
+
+- 기본적으로 집계는 질의 결과에 동작
+
+- 다르게 하고 싶다면, global, filter/filter, missing 활용
+
+#### - global
+
+- 색색하는 색인과 타입의 모든 문서 타입을 버킷으로 생성
+
+- 질의와 무관한 집계
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig12.jpg)
 
@@ -1150,11 +1175,25 @@ curl "$URI?pretty&search_type=count" -d '{
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex17-1.jpg)
 
+#### - filter, filters
+
+- 하나 또는 그 이상의 필터에 일치하는 문서를 버킷으로 생성
+
+- 문서의 집합을 제한
+
+- post fileter 는 집계에 무관
+
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/07fig13.jpg)
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex18-0.jpg)
 
 - ![](https://dpzbhybb2pdcj.cloudfront.net/hinman/Figures/ch07ex18-1.jpg)
+
+#### - missing
+
+- 특정 필드 없는 문서로 버킷 생성
+
+- 데이터 없어서 집계 다루지 못하는 경우
 
 ```bash
 % curl "$URI?pretty&search_type=count" -d '{
