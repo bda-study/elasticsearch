@@ -6,12 +6,21 @@
 
 ## Run Elasticsearch-Kibana using Docker
 
-로컬에서 엘라스틱서치와 키바나 연습 환경을 구성하기 위해 아래와 같이 진행합니다. ([docker-compose를 이용한 ElasticSearch Cluster구성](https://jistol.github.io/docker/2019/03/27/docker-compose-elasticsearch-cluster/) 참고)
+로컬 연습 환경을 구성하기 위해 아래와 같이 진행합니다. ([docker-compose를 이용한 ElasticSearch Cluster구성](https://jistol.github.io/docker/2019/03/27/docker-compose-elasticsearch-cluster/) 참고)
 
-> Tested On:
-> - MacOS
-> - Docker 19.03 (Compose 1.24)
+엘라스틱서치, 키바나 각각 *6.5.3* 버전을 사용합니다.
 
-```bash
-docker-compose up -d
-```
+1. 해당 repository로 이동
+
+    ```bash
+    git clone https://github.com/bda-study/elasticsearchhttps://github.com/bda-study/elasticsearch
+    cd elasticsearch
+    ```
+
+2. docker-compose 실행
+
+    ```bash
+    docker-compose up -d
+    ```
+
+3. 키바나 접속 (localhost:5601)
