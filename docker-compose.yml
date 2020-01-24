@@ -4,13 +4,13 @@ services:
 # Kibana에서 기본적으로 호출하는 ES host주소가 'http://elsaticsearch:9200'이기 때문에 서비스명은 elasticsearch로 쓰시는게 편합니다. 
 # 다른 서비스명을 사용시 Kibana ES host 설정도 같이 추가해주어야 정상 동작합니다.
   elasticsearch:
-    container_name: elasticsearch
-    image: elasticsearch:6.5.3
+    container_name: master-node
+    image: elasticsearch:7.5.2
     environment:
 # ES Cluster명입니다. ES 서비스마다 동일한 명칭을 사용해야합니다.    
       - cluster.name=docker-cluster
 # ES Node명을 설정합니다.
-      - node.name=master-node1
+      - node.name=elasticsearch
 # ES운영중 메모리 스왑을 막기 위한 설정을 추가합니다.
 # 자세한 설명은 페이지 하단의 [Disable swapping]을 참고하세요.
       - bootstrap.memory_lock=true
@@ -20,6 +20,8 @@ services:
 # 리눅스 시스템 자원제한 관련 옵션입니다.
 # ES는 많은 파일디스크립터와 핸들러를 사용하기 때문에 제한 해제가 필요합니다.
 # 자세한 설명은 페이지 하단의 [File Descriptors]을 참고하세요.
+      - discovery.seed_hosts=elasticsearch
+      - cluster.initial_master_nodes=elasticsearch
     ulimits:
       memlock:
         soft: -1
@@ -37,12 +39,12 @@ services:
     tty: true
 # data-node의 Docker 서비스입니다.
 # 대부분의 내용이 master-node와 동일하나 몇가지 차이점이 있습니다.
-  elasticsearch2:
-    container_name: elasticsearch2
-    image: elasticsearch:6.5.3
+  data-node:
+    container_name: data-node
+    image: elasticsearch:7.5.2
     environment:
       - cluster.name=docker-cluster
-      - node.name=data-node1
+      - node.name=data-node-a
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 # 다른 Cluster내 노드를 발견하기 위한 설정입니다.
@@ -66,14 +68,14 @@ services:
 # Kibana 설정입니다.
   kibana:
     container_name: kibana
-    image: kibana:6.5.3
+    image: kibana:7.5.2
     ports:
       - 5601:5601
     networks:
       - esnet
     depends_on:
       - elasticsearch
-      - elasticsearch2
+      - data-node
 volumes:
   es1:
     driver: local

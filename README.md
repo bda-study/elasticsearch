@@ -8,7 +8,7 @@
 
 로컬 연습 환경을 구성하기 위해 아래와 같이 진행합니다. ([docker-compose를 이용한 ElasticSearch Cluster구성](https://jistol.github.io/docker/2019/03/27/docker-compose-elasticsearch-cluster/) 참고)
 
-엘라스틱서치, 키바나 각각 *6.5.3* 버전을 사용합니다.
+엘라스틱서치, 키바나 각각 *7.5.2* 버전을 사용합니다.
 
 1. 해당 repository로 이동
 
