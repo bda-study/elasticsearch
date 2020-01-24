@@ -130,6 +130,8 @@
     - pros: 색인 생성 시 전송하는 데이터가 적어짐.
     - cons: 한 번 재시작 해줘야 함. 색인 마다 지정 불가능하여 유연성 떨어짐.
 
+    설정 파일 Example:
+
     ```yml
     index:
       analysis:
@@ -296,31 +298,23 @@
 
 - Ngram? 토큰의 각 단어 부분을 다중 서브 토큰으로 분해
 
-    1. Unigram
+    1. Unigram (Min=1, Max=1)
 
         `spaghetti` -> `s`,`p`,`a`,`g`,`h`,`e`,`t`,`t`,`i`
 
-    2. Bigram
+    2. Bigram (Min=2, Max=2)
 
         `spaghetti` -> `sp`,`pa`,`ag`,`gh`,`ge`,`et`,`tt`,`ti`
 
-    3. Trigram
+    3. Trigram (Min=3, Max=3)
 
         `spaghetti` -> `spa`,`pag`,`agh`,`ghe`,`het`,`ett`,`tti`
 
-    4. min_gram, max_gram
-
-        Min_gram=1, Max_gram=3 Example:
+    4. min_gram, max_gram (Min=1, Max=3)
 
         `spaghetti` -> `s`,`sp`,`spa`,`p`,`pa`,`pag`,`a`, ...
 
-    5. Edge ngram
-
-        Min_gram=2, Max_gram=6 Example:
-
-        `spaghetti` -> `sp`,`spa`,`spag`,`spagh`,`spaghe`
-
-    6. 설정 Example:
+    Custom Ngram 설정 Example:
 
     ```json
     PUT my_index_ng
@@ -356,10 +350,78 @@
     }
     ```
 
+- Edge ngram? 양 단의 고정된 글자로부터 Ngram 수행
+
+    1. min_gram, max_gram (Min=2, Max=6)
+
+        `spaghetti` -> `sp`,`spa`,`spag`,`spagh`,`spaghe`
+
+    Edge Ngram 설정 Example:
+
+    ```json
+    PUT my_index_eng
+    {
+      "settings": {
+        "analysis": {
+          "analyzer": {
+            "my_analyzer": {
+              "tokenizer": "my_tokenizer"
+            }
+          },
+          "tokenizer": {
+            "my_tokenizer": {
+              "type": "edge_ngram",
+              "min_gram": 2,
+              "max_gram": 6,
+              "token_chars": [
+                "letter",
+                "digit"
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
+
+    ```json
+    POST my_index_eng/_analyze
+    {
+      "analyzer": "my_analyzer",
+      "text": "spaghetti"
+    }
+    ```
+
 - Shingle? 문자가 아닌 토큰 수준의 Ngram
 
-    Example:
-
-    `foo bar baz` -> `foo`, `foo bar`, `foo bar baz`, `baz`, ...
+    Example: `foo bar baz` -> `foo`, `foo bar`, `foo bar baz`, `baz`, ...
 
 ## Stemming
+
+- stemming? 단어를 단어의 원형, 어근으로 축소
+
+    Example: `administrations`, `administrator`, `administrate` -> `administr`
+
+- stemming 알고리즘 -> 더 공격적일 수록 단어 길이를 많이 축소한다
+
+    1. snowball
+
+        - `administrations` -> `administr`
+        - `administrators` -> `administr`
+        - `Administratrate` -> `Administer`
+
+    2. porter_stem
+
+        - `administrations` -> `administr`
+        - `administrators` -> `administr`
+        - `Administratrate` -> `Administer`
+
+    3. kstem
+
+        - `administrations` -> `administration`
+        - `administrators` -> `administrator`
+        - `Administratrate` -> `Administratrate`
+
+## References
+
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
